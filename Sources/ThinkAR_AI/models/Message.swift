@@ -14,4 +14,11 @@ public struct Message{
    public var role:String;
     public var createdAt:Date;
     
+    public init(id: String, content: String, role: String, createdAt: Date) {
+        self.id = id
+        self.content = content
+        self.role = role
+        self.createdAt = createdAt
+    }
+    
 }
