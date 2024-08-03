@@ -9,8 +9,9 @@ import Foundation
 
 
 public struct Message{
-    var id:String;
-    var content:String;
-    var role:String;
-    var createdAt:Date
+   public var id:String;
+   public var content:String;
+   public var role:String;
+    public var createdAt:Date;
+    
 }
