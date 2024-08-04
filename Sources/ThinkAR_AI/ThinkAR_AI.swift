@@ -6,12 +6,12 @@ import SwiftOpenAI
 
 public struct ThinkAR_AI{
     private static var  groqKey = "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"
-    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .apiKey(groqKey), baseURL:"https://api.groq.com/openai/v1")
+    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .apiKey(groqKey), baseURL:"https://api.groq.com/openai")
     
     public init(){}
    
     
-    public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
+    public func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
         let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
         do {
            let choices = try await service.startChat(parameters: parameters).choices
