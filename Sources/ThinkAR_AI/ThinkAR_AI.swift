@@ -6,9 +6,9 @@ import SwiftOpenAI
 
 public struct ThinkAR_AI{
     private static var  groqKey = "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"
-//    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .bearer(groqKey), baseURL:"https://api.groq.com/openai")
+    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .bearer(groqKey), baseURL:"https://api.groq.com/openai", debugEnabled: false)
     
-    private let service:some OpenAIService = OpenAIServiceFactory.service( baseURL:"https://api.groq.com//openai")
+//    private let service:some OpenAIService = OpenAIServiceFactory.service( baseURL:"https://api.groq.com//openai")
     
     public init(){}
     
