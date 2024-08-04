@@ -6,15 +6,15 @@ import OpenAI
 
 public struct ThinkAR_AI{
     private static var  groqKey = "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"
-    private let host = "api.groq.com/openai".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-    private static let config = OpenAI.Configuration(token: groqKey, host:host ?? "api.groq.com", scheme: "https")
+    private static let host = "api.groq.com/openai".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+    private static let config = OpenAI.Configuration(token: groqKey, host: host ?? "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
     
     public init(){}
     
     public  func addMessage(_ message:String) async -> Result< ChatResult, Error> {
-       
-        print(host)
+        let h = "api.groq.com/openai".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        print(h)
         let query = ChatQuery(messages: [.init(role: .user, content: message)!], model:"llama-3.1-70b-versatile")
         do {
             let result = try await openAI.chats(query: query)
