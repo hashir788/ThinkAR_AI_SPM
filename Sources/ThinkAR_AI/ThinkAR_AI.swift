@@ -8,13 +8,13 @@ public struct ThinkAR_AI{
     private static var  groqKey = "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"
 //    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .bearer(groqKey), baseURL:"https://api.groq.com/openai")
     
-    private let service:some OpenAIService = OpenAIServiceFactory.service( baseURL:"https://api.groq.com/openai")
+    private let service:some OpenAIService = OpenAIServiceFactory.service( baseURL:"https://api.groq.com/openai/v1/chat/completions")
     
     public init(){}
     
     public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
-//        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
-        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama3.1"))
+        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
+//        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama3.1"))
         do {
            let choices = try await service.startChat(parameters: parameters).choices
             return Result.success(choices)
