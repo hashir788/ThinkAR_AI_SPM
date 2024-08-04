@@ -14,7 +14,7 @@ public struct ThinkAR_AI{
     
     public  func addMessage(_ message:String) async -> Result< CompletionsResult, Error> {
        
-        let query = CompletionsQuery(model:"llama-3.1-70b-versatile", prompt: "What is 42?", temperature: 0, maxTokens: 100, topP: 1, frequencyPenalty: 0, presencePenalty: 0, stop: ["\\n"])
+        let query = CompletionsQuery(model:"llama-3.1-70b-versatile", prompt: message, temperature: 0, maxTokens: 100, topP: 1)
         do {
             let result = try await openAI.completions(query: query)
             return Result.success(result)
