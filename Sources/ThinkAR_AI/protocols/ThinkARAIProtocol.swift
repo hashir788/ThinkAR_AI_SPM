@@ -9,5 +9,8 @@ import Foundation
 
 
 public protocol ThinkARAIProtocol{
+    
+    
+    
     func addMessage() -> Message
 }

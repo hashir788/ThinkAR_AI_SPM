@@ -2,14 +2,27 @@
 // https://docs.swift.org/swift-book
 
 import Foundation
+import SwiftOpenAI
 
 public struct ThinkAR_AI{
+    private static var  groqKey = "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"
+    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .apiKey(groqKey), baseURL:"https://api.groq.com/openai/v1")
     
-    public init(){}
+   
     
-    public func addMessage(_ message:String) -> Message {
-        print("Message: \(message) added")
-        return Message(id:"",content: message, role: "", createdAt: Date.distantFuture)
+    public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
+        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
+        do {
+           let choices = try await service.startChat(parameters: parameters).choices
+            return Result.success(choices)
+           // Work with choices
+        } catch APIError.responseUnsuccessful(let description, let statusCode) {
+           print("Network error with status code: \(statusCode) and description: \(description)")
+            return Result.failure(APIError.responseUnsuccessful(description: description, statusCode: statusCode))
+        } catch {
+           print(error.localizedDescription)
+            return Result.failure(APIError.responseUnsuccessful(description: error.localizedDescription, statusCode: 500))
+        }
     }
     
     public func addVoiceMessage(audioMessage:Data){}
