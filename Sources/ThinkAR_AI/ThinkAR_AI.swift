@@ -8,6 +8,7 @@ public struct ThinkAR_AI{
     private static var  groqKey = "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"
     private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .apiKey(groqKey), baseURL:"https://api.groq.com/openai/v1")
     
+    public init(){}
    
     
     public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
