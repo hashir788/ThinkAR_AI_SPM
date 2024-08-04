@@ -14,7 +14,7 @@ public struct ThinkAR_AI{
     
     public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
 //        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
-        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1"))
+        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama3.1"))
         do {
            let choices = try await service.startChat(parameters: parameters).choices
             return Result.success(choices)
