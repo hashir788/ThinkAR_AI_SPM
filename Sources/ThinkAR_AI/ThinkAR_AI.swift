@@ -2,29 +2,25 @@
 // https://docs.swift.org/swift-book
 
 import Foundation
-import SwiftOpenAI
+import OpenAI
 
 public struct ThinkAR_AI{
     private static var  groqKey = "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"
-    private let service:some OpenAIService = OpenAIServiceFactory.service(apiKey: .bearer(groqKey), baseURL:"https://api.groq.com/openai", debugEnabled: false)
-    
-//    private let service:some OpenAIService = OpenAIServiceFactory.service( baseURL:"https://api.groq.com//openai")
+    private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
+    private let openAI = OpenAI(configuration: config)
     
     public init(){}
     
-    public  func addMessage(_ message:String) async -> Result< [ChatCompletionObject.ChatChoice], APIError> {
-        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama-3.1-70b-versatile"))
-//        let parameters = ChatCompletionParameters(messages: [.init(role: .user, content: .text(message))], model: .custom("llama3.1"))
+    public  func addMessage(_ message:String) async -> Result< CompletionsResult, Error> {
+       
+        let query = CompletionsQuery(model:"llama-3.1-70b-versatile", prompt: "What is 42?", temperature: 0, maxTokens: 100, topP: 1, frequencyPenalty: 0, presencePenalty: 0, stop: ["\\n"])
         do {
-           let choices = try await service.startChat(parameters: parameters).choices
-            return Result.success(choices)
+            let result = try await openAI.completions(query: query)
+            return Result.success(result)
            // Work with choices
-        } catch APIError.responseUnsuccessful(let description, let statusCode) {
-           print("Network error with status code: \(statusCode) and description: \(description)")
-            return Result.failure(APIError.responseUnsuccessful(description: description, statusCode: statusCode))
         } catch {
            print(error.localizedDescription)
-            return Result.failure(APIError.responseUnsuccessful(description: error.localizedDescription, statusCode: 500))
+            return Result.failure(error)
         }
     }
     

@@ -13,13 +13,14 @@ let package = Package(
             targets: ["ThinkAR_AI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/jamesrochabrun/SwiftOpenAI", from: "3.6.2")
+//        .package(url: "https://github.com/jamesrochabrun/SwiftOpenAI", from: "3.6.2")
+        .package(url: "https://github.com/MacPaw/OpenAI", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ThinkAR_AI", dependencies: ["SwiftOpenAI"], path: "Sources"),
+            name: "ThinkAR_AI", dependencies: ["OpenAI"], path: "Sources"),
         .testTarget(
             name: "ThinkAR_AITests",
             dependencies: ["ThinkAR_AI"]),
