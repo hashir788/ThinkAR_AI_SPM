@@ -12,11 +12,12 @@ public struct ThinkAR_AI{
     
     public init(){}
     
-    public  func addMessage(_ message:String) async -> Result< CompletionsResult, Error> {
+    public  func addMessage(_ message:String) async -> Result< ChatResult, Error> {
        
-        let query = CompletionsQuery(model:"llama-3.1-70b-versatile", prompt: message, temperature: 0, maxTokens: 100, topP: 1)
+//        let query = ChatQuery(model:"llama-3.1-70b-versatile", prompt: message, temperature: 0, maxTokens: 100, topP: 1)
+        let query = ChatQuery(messages: [.init(role: .user, content: message)!], model:"llama-3.1-70b-versatile")
         do {
-            let result = try await openAI.completions(query: query)
+            let result = try await openAI.chats(query: query)
             return Result.success(result)
            // Work with choices
         } catch {
