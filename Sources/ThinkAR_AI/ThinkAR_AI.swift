@@ -6,8 +6,8 @@ import OpenAI
 
 public struct ThinkAR_AI{
     private static var  groqKey = "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"
-    private static let host = "api.groq.com/openai".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-    private static let config = OpenAI.Configuration(token: groqKey, host:host ?? "api.groq.com", scheme: "https")
+
+    private static let config = OpenAI.Configuration(token: groqKey, host:"api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
     
     public init(){}
