@@ -2,11 +2,11 @@
   "pins" : [
     {
       "identity" : "openai",
-      "kind" : "localSourceControl",
-      "location" : "/Users/hashir/Desktop/ThinkAR/OpenAI",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hashir788/OpenAI",
       "state" : {
         "branch" : "main",
-        "revision" : "4f43b3c76f1e4564e01ecfa87b7ba96c98e5b4e4"
+        "revision" : "5dc902354423e481f40221418ac167d78ed868ae"
       }
     }
   ],
