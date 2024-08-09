@@ -10,14 +10,14 @@ import Foundation
 
 struct Tools{
     enum ToolCalls:String {
-        case calendarLookup = "calendar_lookup"
+        case lookupCalendar = "lookup_calendar"
         case changeBrightness = "change_brightness"
         case changeVolume = "change_volume"
         
         init?(from string:String) {
             switch string {
-            case "calendar_lookup":
-                self = .calendarLookup
+            case "lookup_calendar":
+                self = .lookupCalendar
             case "change_brightness":
                 self = .changeBrightness
             case "change_volume":
@@ -33,7 +33,7 @@ struct Tools{
 class ToolsHandler{
     func invokeTools(_ t:Tools) -> String {
         switch t.tool {
-        case .calendarLookup:
+        case .lookupCalendar:
             print("Calendar func is called")
             return "Calendar func is called"
         case .changeBrightness:
