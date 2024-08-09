@@ -1,0 +1,6 @@
+framework module MBBluetooth {
+  umbrella header "MBBluetooth-umbrella.h"
+
+  export *
+  module * { export * }
+}
