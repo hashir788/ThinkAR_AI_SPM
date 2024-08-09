@@ -62,25 +62,23 @@ public struct ThinkAR_AI{
                             
                             let toolResult:String = toolHandler.invokeTools(toolChoice)
                             print(toolResult)
-                            
-                           
-                            
-
-                            
                         }
                     }
                    
-                    if !functionCalls.isEmpty {
-                        await addMessage(message: message)
-                    }
-                    
-                    let message = Message(
+                    let m = Message(
                         id: partialChatResult.id,
                         content: messageText,
                         role: choice.delta.role?.rawValue ?? "assistant",
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
-                    print(message)
+                    
+                    if functionCalls.count > 0 {
+                        print("Not empty")
+                        await addMessage(message: m)
+                    }
+                    
+                  
+                    print(m)
                     //                    if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
                     //                        // Meld into previous message
                     //                        let previousMessage = existingMessages[existingMessageIndex]
