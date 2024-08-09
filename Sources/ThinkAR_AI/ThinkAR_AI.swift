@@ -42,7 +42,7 @@ public struct ThinkAR_AI{
             
             for try await partialChatResult in chatsStream {
                 for choice in partialChatResult.choices {
-                    print(choice)
+//                    print(choice)
                     //                    let existingMessages = conversations[conversationIndex].messages
                     // Function calls are also streamed, so we need to accumulate.
                     choice.delta.toolCalls?.forEach { toolCallDelta in
@@ -74,12 +74,12 @@ public struct ThinkAR_AI{
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
                     
-                    if functionCalls.count > 0 {
-                        print("Not empty")
-                        await addMessage(message: m)
-                    }
-                    
-                    print("Message Is:")
+//                    if functionCalls.count > 0 {
+//                        print("Not empty")
+//                        await addMessage(message: m)
+//                    }
+//                    
+//                    print("Message Is:")
                     print(m)
                     //                    if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
                     //                        // Meld into previous message
