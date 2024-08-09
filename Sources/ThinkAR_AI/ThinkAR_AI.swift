@@ -58,6 +58,11 @@ public struct ThinkAR_AI{
                     {
                         functionCalls.forEach { (name: String, argument: String?) in
                             messageText += "Function call: name=\(name) arguments=\(argument ?? "")\n"
+                            let toolHandler = ToolsHandler()
+                            let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
+                            
+                            let toolResult:String = toolHandler.invokeTools(toolChoice)
+                            print(toolResult)
                         }
                     }
                     let message = Message(
