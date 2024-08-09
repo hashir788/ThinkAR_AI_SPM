@@ -14,7 +14,7 @@ public struct ThinkAR_AI{
     
     public init(){}
     
-    public  func addMessage(_ message:String) async {
+    public  func addMessage(message:Message) async {
         let query = ChatQuery(messages: [
             .init(role:.system , content: """
              You are an AI assistant specially designed for ThinkAR Smart Glass.
@@ -33,7 +33,7 @@ public struct ThinkAR_AI{
                   *Please make sure you get the user's permission before making any critical decisions,
                     like booking an uber rider or ordering food from Food Panda*
                   ** Your answers must be short and precise**
-        """)!,.init(role: .user, content: message)!], model:"llama-3.1-70b-versatile", tools: AgentTools.tools)
+        """)!,.init(role:.init(rawValue: message.role)!, content: message.content)!], model:"llama-3.1-70b-versatile", tools: AgentTools.tools)
         do {
             let chatsStream: AsyncThrowingStream<ChatStreamResult, Error> = openAI.chatsStream(
                 query: query)
@@ -48,7 +48,6 @@ public struct ThinkAR_AI{
                         if let functionCallDelta = toolCallDelta.function {
                             if let nameDelta = functionCallDelta.name {
                                 functionCalls.append((nameDelta, functionCallDelta.arguments))
-                                print(nameDelta)
                             }
                         }
                     }
@@ -56,15 +55,25 @@ public struct ThinkAR_AI{
                     if let finishReason = choice.finishReason,
                        finishReason == .toolCalls
                     {
-                        functionCalls.forEach { (name: String, argument: String?) in
+                    functionCalls.forEach {  (name: String, argument: String?)  in
                             messageText += "Function call: name=\(name) arguments=\(argument ?? "")\n"
                             let toolHandler = ToolsHandler()
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
                             let toolResult:String = toolHandler.invokeTools(toolChoice)
                             print(toolResult)
+                            
+                           
+                            
+
+                            
                         }
                     }
+                   
+                    if !functionCalls.isEmpty {
+                        await addMessage(message: message)
+                    }
+                    
                     let message = Message(
                         id: partialChatResult.id,
                         content: messageText,
