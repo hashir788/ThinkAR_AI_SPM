@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct AIService{
+struct AIService{
     init() {
         
     }

@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ThinkAR_AI",
-    platforms: [.iOS(.v15), .macOS(.v14)],
+    platforms: [.iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -13,15 +13,19 @@ let package = Package(
             targets: ["ThinkAR_AI"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/jamesrochabrun/SwiftOpenAI", from: "3.6.2")
-//        .package(url: "https://github.com/MacPaw/OpenAI", branch: "main")
+        //        .package(url: "https://github.com/jamesrochabrun/SwiftOpenAI", from: "3.6.2")
+        //        .package(url: "https://github.com/MacPaw/OpenAI", branch: "main")
         .package(url: "https://github.com/hashir788/OpenAI", branch: "main"),
+//        .package(name:"MBBluetooth",path: "./Binaries/MBBluetooth.xcframework")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ThinkAR_AI", dependencies: ["OpenAI"], path: "Sources"),
+            name: "ThinkAR_AI", dependencies: ["OpenAI","MBBluetooth"] , path: "Sources"
+//            linkerSettings: [.linkedFramework("Binaries/MBBluetooth")]
+        ),
+        .binaryTarget(name: "MBBluetooth", path: "./Binaries/MBBluetooth.xcframework"),
         .testTarget(
             name: "ThinkAR_AITests",
             dependencies: ["ThinkAR_AI"]),
