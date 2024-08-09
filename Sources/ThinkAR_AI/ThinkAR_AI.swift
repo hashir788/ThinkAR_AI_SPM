@@ -33,7 +33,7 @@ public struct ThinkAR_AI{
                   *Please make sure you get the user's permission before making any critical decisions,
                     like booking an uber rider or ordering food from Food Panda*
                   ** Your answers must be short and precise**
-        """)!,.init(role:.init(rawValue: message.role)!, content: message.content)!], model:"llama-3.1-70b-versatile", tools: AgentTools.tools)
+        """)!,.init(role:.init(rawValue: message.role)!, content: message.content)!], model:"llama3-groq-70b-8192-tool-use-preview", tools: AgentTools.tools)
         do {
             let chatsStream: AsyncThrowingStream<ChatStreamResult, Error> = openAI.chatsStream(
                 query: query)

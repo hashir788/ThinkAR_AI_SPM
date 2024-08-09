@@ -15,9 +15,7 @@ struct AgentTools {
             description: "Lookup users' calendar",
             parameters: .init(
                 type: .object,
-                properties: [
-                    "user_id": .init(type: .string, description: "ID if the user")
-                ],
+                properties: [:],
                 required: []
             )
         )),
