@@ -42,6 +42,7 @@ public struct ThinkAR_AI{
             
             for try await partialChatResult in chatsStream {
                 for choice in partialChatResult.choices {
+                    print(choice)
                     //                    let existingMessages = conversations[conversationIndex].messages
                     // Function calls are also streamed, so we need to accumulate.
                     choice.delta.toolCalls?.forEach { toolCallDelta in
