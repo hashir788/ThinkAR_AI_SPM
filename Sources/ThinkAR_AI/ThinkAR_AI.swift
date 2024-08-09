@@ -62,6 +62,7 @@ public struct ThinkAR_AI{
                             
                             let toolResult:String = toolHandler.invokeTools(toolChoice)
                             print(toolResult)
+                        print(messageText)
                         }
                     }
                    
@@ -77,7 +78,7 @@ public struct ThinkAR_AI{
                         await addMessage(message: m)
                     }
                     
-                  
+                    print("Message Is:")
                     print(m)
                     //                    if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
                     //                        // Meld into previous message
