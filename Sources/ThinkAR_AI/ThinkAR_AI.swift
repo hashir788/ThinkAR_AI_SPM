@@ -56,12 +56,13 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
         conversations[conversationIndex].messages.append(message)
         
         await handleChat(
-            conversationId: conversationId
+            conversationId: conversationId,
+            message: message
         )
     }
 
     @MainActor
-    func handleChat(conversationId: String) async {
+    func handleChat(conversationId: String, message lastUserMessage: Message) async {
         guard let conversation = conversations.first(where: { $0.id == conversationId }) else {
             return
         }
@@ -102,11 +103,10 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             
                             let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
 //                            print(toolResult)
-                            // Last two chats
-                            var lastUserMessage = conversations[conversationIndex].messages.suffix(1)
+                            
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
-                            var finalMsgs = [toolSystemMessage, lastUserMessage[0], .init(id: UUID().uuidString, role: .tool, content: toolResult, createdAt: Date())]
+                            var finalMsgs = [toolSystemMessage, lastUserMessage, .init(id: UUID().uuidString, role: .tool, content: toolResult, createdAt: Date())]
                             
                             let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
