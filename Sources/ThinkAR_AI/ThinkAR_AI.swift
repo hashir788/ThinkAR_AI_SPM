@@ -103,20 +103,15 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
                             let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
-//                            print(toolResult)
                             
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
                             let toolResultMessage = Message(id: UUID().uuidString, role: .assistant, content: toolResult, createdAt: Date())
                             let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
-                            
-                            print(finalMsgs)
-                            print(toolResultMessage)
-                            
+
                             let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
                             }
-                            print(finalMsgs)
                             let toolQuery = ChatQuery(
                                 messages: msgs, model: groqModel
                             )
