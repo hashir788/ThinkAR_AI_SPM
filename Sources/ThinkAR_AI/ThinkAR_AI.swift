@@ -1,40 +1,85 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
+import Combine
 import Foundation
-import OpenAI
 import MBBluetooth
+import OpenAI
 
-
-public struct ThinkAR_AI{
-    private static var  groqKey = "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"
+public final class ThinkAR_AI: ObservableObject {
+    private static var groqKey = "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"
     
-    private static let config = OpenAI.Configuration(token: groqKey, host:"api.groq.com", scheme: "https")
+    private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
+    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
     
-    public init(){}
+    public init() {}
     
-    public  func addMessage(message:Message) async {
-        let query = ChatQuery(messages: [
-            .init(role:.system , content: """
-             You are an AI assistant specially designed for ThinkAR Smart Glass.
-             Your are instructed by voice or text commands
-                  You have access to the users personal details and can carry out their daily tasks for them.
-                  The examples of task you can carry out are:
-                   - Lookup calendar and schedule
-                   - Based on the calendar you can book cabs, order foods, set reminders etc.
-                   - Check weather
-                   - Make calls and many more.
-                  Suggest plans and actions if you think it is suitable based on the context,
-                   - for example if the user has multiple meetings or a busy day help the
-                     user out by creating an action plan with how much time should be spent
-                     or add reminders and so on..
-                  Your ultimate goal is to be a smart assistant to the user***
-                  *Please make sure you get the user's permission before making any critical decisions,
-                    like booking an uber rider or ordering food from Food Panda*
-                  ** Your answers must be short and precise**
-        """)!,.init(role:.init(rawValue: message.role)!, content: message.content)!], model:"llama3-groq-70b-8192-tool-use-preview", tools: AgentTools.tools)
+    @Published var conversations: [Conversation] = []
+    @Published var conversationErrors: [Conversation.ID: Error] = [:]
+    @Published var selectedConversationID: Conversation.ID?
+    
+    public var selectedConversation: Conversation? {
+        selectedConversationID.flatMap { id in
+            conversations.first { $0.id == id }
+        }
+    }
+    
+    public var selectedConversationPublisher: AnyPublisher<Conversation?, Never> {
+        $selectedConversationID.receive(on: RunLoop.main).map { id in
+            self.conversations.first(where: { $0.id == id })
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    public func createConversation() -> String {
+        let systemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.prompt.rawValue, createdAt: Date())
+        let conversation = Conversation(id: UUID().uuidString, messages: [
+            systemMessage
+        ])
+        conversations.append(conversation)
+        return conversation.id
+    }
+    
+    public func selectConversation(_ conversationId: Conversation.ID?) {
+        selectedConversationID = conversationId
+    }
+    
+    public func deleteConversation(_ conversationId: Conversation.ID) {
+        conversations.removeAll(where: { $0.id == conversationId })
+    }
+    
+    @MainActor
+    func sendMessage(
+        message: Message,
+        conversationId: Conversation.ID
+    ) async {
+        guard let conversationIndex = conversations.firstIndex(where: { $0.id == conversationId }) else {
+            return
+        }
+        conversations[conversationIndex].messages.append(message)
+        
+        await handleChat(
+            conversationId: conversationId
+        )
+    }
+    
+    @MainActor
+    func handleChat(conversationId: String) async {
+        guard let conversation = conversations.first(where: { $0.id == conversationId }) else {
+            return
+        }
         do {
+            guard let conversationIndex = conversations.firstIndex(where: { $0.id == conversationId }) else {
+                return
+            }
+            
+            let query = ChatQuery(
+                messages: conversation.messages.map { message in
+                    ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
+                }, model: groqModel,
+                tools: AgentTools.tools
+            )
             let chatsStream: AsyncThrowingStream<ChatStreamResult, Error> = openAI.chatsStream(
                 query: query)
             
@@ -42,8 +87,7 @@ public struct ThinkAR_AI{
             
             for try await partialChatResult in chatsStream {
                 for choice in partialChatResult.choices {
-//                    print(choice)
-                    //                    let existingMessages = conversations[conversationIndex].messages
+                    let existingMessages = conversations[conversationIndex].messages
                     // Function calls are also streamed, so we need to accumulate.
                     choice.delta.toolCalls?.forEach { toolCallDelta in
                         if let functionCallDelta = toolCallDelta.function {
@@ -56,58 +100,49 @@ public struct ThinkAR_AI{
                     if let finishReason = choice.finishReason,
                        finishReason == .toolCalls
                     {
-                    functionCalls.forEach {  (name: String, argument: String?)  in
+                        for (name, argument) in functionCalls {
                             messageText += "Function call: name=\(name) arguments=\(argument ?? "")\n"
                             let toolHandler = ToolsHandler()
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
-                            let toolResult:String = toolHandler.invokeTools(toolChoice)
+                            let toolResult: String = toolHandler.invokeTools(toolChoice)
                             print(toolResult)
-                        print(messageText)
+                            // TO DO
+                            // 1. Make a chat completion request to finalize the answer
                         }
                     }
-                   
-                    let m = Message(
+                    
+                    let message = Message(
                         id: partialChatResult.id,
+                        role: choice.delta.role ?? .tool,
                         content: messageText,
-                        role: choice.delta.role?.rawValue ?? "assistant",
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
                     
-//                    if functionCalls.count > 0 {
-//                        print("Not empty")
-//                        await addMessage(message: m)
-//                    }
-//                    
-//                    print("Message Is:")
-                    print(m)
-                    //                    if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
-                    //                        // Meld into previous message
-                    //                        let previousMessage = existingMessages[existingMessageIndex]
-                    //                        let combinedMessage = Message(
-                    //                            id: message.id, // id stays the same for different deltas
-                    //                            role: message.role,
-                    //                            content: previousMessage.content + message.content,
-                    //                            createdAt: message.createdAt
-                    //                        )
-                    //                        conversations[conversationIndex].messages[existingMessageIndex] = combinedMessage
-                    //                    } else {
-                    //                        conversations[conversationIndex].messages.append(message)
-                    //                    }
+                    if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
+                        // Meld into previous message
+                        let previousMessage = existingMessages[existingMessageIndex]
+                        let combinedMessage = Message(
+                            id: message.id, // id stays the same for different deltas
+                            role: message.role,
+                            content: previousMessage.content + message.content,
+                            createdAt: message.createdAt
+                        )
+                        conversations[conversationIndex].messages[existingMessageIndex] = combinedMessage
+                        
+                        print(conversation)
+                        
+                    } else {
+                        conversations[conversationIndex].messages.append(message)
+                    }
                 }
             }
-        }catch {
-            
+        } catch {
+            conversationErrors[conversationId] = error
         }
-        
-        
-        
     }
     
-    public func addVoiceMessage(audioMessage:Data){}
+    public func addVoiceMessage(audioMessage: Data) {}
     
-    public func translate(){}
-    
-    
-    
+    public func translate() {}
 }

@@ -12,5 +12,5 @@ public protocol ThinkARAIProtocol{
     
     
     
-    func addMessage() -> Message
+//    func addMessage() -> Message
 }
