@@ -110,10 +110,10 @@ public final class ThinkAR_AI: ObservableObject {
                             var lastTwoMessages = conversations[conversationIndex].messages.suffix(2)
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
+                            var finalMsgs = [toolSystemMessage]
+                            finalMsgs += lastTwoMessages
                             
-                            lastTwoMessages.insert(toolSystemMessage, at: 0)
-                            
-                            let msgs = lastTwoMessages.map { message in
+                            let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
                             }
                             
@@ -122,8 +122,8 @@ public final class ThinkAR_AI: ObservableObject {
                             )
                             
                             let result = try await openAI.chats(query: toolQuery)
-                            
-                            messageText += "\(result.choices[0].message.content.self)"
+                            print(result)
+                            messageText += "\(result.choices[0].message.content)"
                         }
                     }
                     
