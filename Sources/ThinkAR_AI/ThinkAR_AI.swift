@@ -101,7 +101,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
                             let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
-                            print(toolResult)
+//                            print(toolResult)
                             // Last two chats
                             var lastTwoMessages = conversations[conversationIndex].messages.suffix(2)
                             // Make a new chat completion request
@@ -112,7 +112,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
                             }
-                            
+                            print(finalMsgs)
                             let toolQuery = ChatQuery(
                                 messages: msgs, model: groqModel
                             )
