@@ -66,7 +66,6 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
         guard let conversation = conversations.first(where: { $0.id == conversationId }) else {
             return
         }
-        print("last user msg: \(lastUserMessage)")
         do {
             guard let conversationIndex = conversations.firstIndex(where: { $0.id == conversationId }) else {
                 return
