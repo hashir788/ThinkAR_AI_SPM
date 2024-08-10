@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Mohamed Hashir on 2024-08-10.
 //
@@ -12,9 +12,9 @@ public struct Conversation {
         self.id = id
         self.messages = messages
     }
-    
+
     public typealias ID = String
-    
+
     public let id: String
     public var messages: [Message]
 }
