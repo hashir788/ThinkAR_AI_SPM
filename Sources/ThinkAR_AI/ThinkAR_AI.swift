@@ -119,6 +119,8 @@ public final class ThinkAR_AI: ObservableObject {
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
                     
+                    print(message)
+                    
                     if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
                         // Meld into previous message
                         let previousMessage = existingMessages[existingMessageIndex]
@@ -134,7 +136,7 @@ public final class ThinkAR_AI: ObservableObject {
                         conversations[conversationIndex].messages.append(message)
                     }
                 }
-                print(conversation)
+//                print(conversation)
             }
         } catch {
             conversationErrors[conversationId] = error
