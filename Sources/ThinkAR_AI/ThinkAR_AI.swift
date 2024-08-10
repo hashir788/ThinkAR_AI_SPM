@@ -3,21 +3,18 @@
 
 import Combine
 import Foundation
-import MBBluetooth
 import OpenAI
 
-public final class ThinkAR_AI: ObservableObject {
-    private static var groqKey = "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"
+public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
+    private static var groqKey = "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"
     
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
     private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
     
-    public init() {}
-    
-    @Published var conversations: [Conversation] = []
-    @Published var conversationErrors: [Conversation.ID: Error] = [:]
-    @Published var selectedConversationID: Conversation.ID?
+    @Published public var conversations: [Conversation] = []
+    @Published public var conversationErrors: [Conversation.ID: Error] = [:]
+    @Published public var selectedConversationID: Conversation.ID?
     
     public var selectedConversation: Conversation? {
         selectedConversationID.flatMap { id in
@@ -50,10 +47,7 @@ public final class ThinkAR_AI: ObservableObject {
     }
     
     @MainActor
-    public func sendMessage(
-        message: Message,
-        conversationId: Conversation.ID
-    ) async {
+    public func addMessage(message: Message, conversationId: Conversation.ID) async {
         guard let conversationIndex = conversations.firstIndex(where: { $0.id == conversationId }) else {
             return
         }
@@ -63,7 +57,7 @@ public final class ThinkAR_AI: ObservableObject {
             conversationId: conversationId
         )
     }
-    
+
     @MainActor
     func handleChat(conversationId: String) async {
         guard let conversation = conversations.first(where: { $0.id == conversationId }) else {
@@ -104,7 +98,7 @@ public final class ThinkAR_AI: ObservableObject {
                             let toolHandler = ToolsHandler()
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
-                            let toolResult: String = toolHandler.invokeTools(toolChoice)
+                            let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
                             print(toolResult)
                             // Last two chats
                             var lastTwoMessages = conversations[conversationIndex].messages.suffix(2)
@@ -122,8 +116,7 @@ public final class ThinkAR_AI: ObservableObject {
                             )
                             
                             let result = try await openAI.chats(query: toolQuery)
-                            print(result)
-                            messageText += "\(result.choices[0].message.content)"
+                            messageText += "\(String(describing: result.choices[0].message.content?.string))"
                         }
                     }
                     
@@ -133,8 +126,6 @@ public final class ThinkAR_AI: ObservableObject {
                         content: messageText,
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
-                    
-                    print(message)
                     
                     if let existingMessageIndex = existingMessages.firstIndex(where: { $0.id == partialChatResult.id }) {
                         // Meld into previous message
@@ -152,13 +143,30 @@ public final class ThinkAR_AI: ObservableObject {
                     }
                 }
             }
-            print(conversations)
         } catch {
             conversationErrors[conversationId] = error
         }
     }
     
-    public func addVoiceMessage(audioMessage: Data) {}
+    public func addVoiceMessage(audio: Data, fileType: AudioTranscriptionQuery.FileType, conversationId: String) async {
+        let query = AudioTranscriptionQuery(file: audio, fileType: fileType, model: .whisper_1)
+        do {
+            let result = try await openAI.audioTranscriptions(query: query)
+            let message = Message(id: UUID().uuidString, role: .user, content: result.text, createdAt: Date())
+            await addMessage(message: message, conversationId: conversationId)
+        } catch {
+            print(error)
+        }
+    }
     
-    public func translate() {}
+    public func translate(audio: Data, fileType: AudioTranscriptionQuery.FileType, conversationId: String) async {
+        let query = AudioTranslationQuery(file: audio, fileType: fileType, model: .whisper_1)
+        do {
+            let result = try await openAI.audioTranslations(query: query)
+            let message = Message(id: UUID().uuidString, role: .user, content: result.text, createdAt: Date())
+            await addMessage(message: message, conversationId: conversationId)
+        } catch {
+            print(error)
+        }
+    }
 }
