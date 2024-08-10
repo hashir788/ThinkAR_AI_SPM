@@ -37,15 +37,31 @@ class ToolsHandler {
 
         switch t.tool {
         case .lookupCalendar:
-            print("Calendar func is called")
-            return "Calendar func is called"
+            return """
+            {
+                events:[
+                        {
+                            id:1233,
+                            name: Meeting with CEO,
+                            startTime:2024/07/08 10:00 AM,
+                            endTime:2024/07/08 11:00 AM,
+                        },
+                        {
+                            id:85878,
+                            name: Lunch With Joe,
+                            startTime:2024/07/08 12:00 PM,
+                            endTime:2024/07/08 1:00 PM,
+                        },
+                    ]
+            }
+            """
         case .changeBrightness:
             let action = args!["action_type"] as! String
             print("Asked to \(action) the brightness")
             if action == "Increase" {
                 return "Device Brightness Increased"
             } else {
-                return "Device Brightnes Decreases"
+                return "Device Brightnes Decreased"
             }
         case .changeVolume:
             let action = args!["action_type"] as! String
@@ -53,7 +69,7 @@ class ToolsHandler {
             if action == "Increase" {
                 return "Device Volume Increased"
             } else {
-                return "Device Volume Decreases"
+                return "Device Volume Decreased"
             }
         }
     }
