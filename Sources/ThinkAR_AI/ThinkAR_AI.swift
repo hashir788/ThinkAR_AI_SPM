@@ -103,11 +103,10 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
 //                            print(toolResult)
                             // Last two chats
-                            var lastTwoMessages = conversations[conversationIndex].messages.suffix(2)
+                            var lastUserMessage = conversations[conversationIndex].messages.suffix(1)
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
-                            var finalMsgs = [toolSystemMessage]
-                            finalMsgs += lastTwoMessages
+                            var finalMsgs = [toolSystemMessage, lastUserMessage[0], .init(id: UUID().uuidString, role: .tool, content: toolResult, createdAt: Date())]
                             
                             let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
