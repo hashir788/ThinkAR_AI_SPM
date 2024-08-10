@@ -114,7 +114,7 @@ public final class ThinkAR_AI: ObservableObject {
                     
                     let message = Message(
                         id: partialChatResult.id,
-                        role: choice.delta.role ?? .tool,
+                        role: choice.delta.role ?? .assistant,
                         content: messageText,
                         createdAt: Date(timeIntervalSince1970: TimeInterval(partialChatResult.created))
                     )
@@ -136,8 +136,8 @@ public final class ThinkAR_AI: ObservableObject {
                         conversations[conversationIndex].messages.append(message)
                     }
                 }
-//                print(conversation)
             }
+            print(conversation)
         } catch {
             conversationErrors[conversationId] = error
         }
