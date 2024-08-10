@@ -101,14 +101,29 @@ public final class ThinkAR_AI: ObservableObject {
                        finishReason == .toolCalls
                     {
                         for (name, argument) in functionCalls {
-                            messageText += "Function call: name=\(name) arguments=\(argument ?? "")\n"
                             let toolHandler = ToolsHandler()
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
                             let toolResult: String = toolHandler.invokeTools(toolChoice)
                             print(toolResult)
-                            // TO DO
-                            // 1. Make a chat completion request to finalize the answer
+                            // Last two chats
+                            var lastTwoMessages = conversations[conversationIndex].messages.suffix(2)
+                            // Make a new chat completion request
+                            let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
+                            
+                            lastTwoMessages.insert(toolSystemMessage, at: 0)
+                            
+                            let msgs = lastTwoMessages.map { message in
+                                ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
+                            }
+                            
+                            let toolQuery = ChatQuery(
+                                messages: msgs, model: groqModel
+                            )
+                            
+                            let result = try await openAI.chats(query: toolQuery)
+                            
+                            messageText += "\(result.choices[0].message.content.self)"
                         }
                     }
                     
