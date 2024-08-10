@@ -130,12 +130,11 @@ public final class ThinkAR_AI: ObservableObject {
                         )
                         conversations[conversationIndex].messages[existingMessageIndex] = combinedMessage
                         
-                        print(conversation)
-                        
                     } else {
                         conversations[conversationIndex].messages.append(message)
                     }
                 }
+                print(conversation)
             }
         } catch {
             conversationErrors[conversationId] = error
