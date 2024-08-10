@@ -50,7 +50,7 @@ public final class ThinkAR_AI: ObservableObject {
     }
     
     @MainActor
-    func sendMessage(
+    public func sendMessage(
         message: Message,
         conversationId: Conversation.ID
     ) async {
