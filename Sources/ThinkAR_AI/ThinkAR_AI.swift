@@ -137,7 +137,7 @@ public final class ThinkAR_AI: ObservableObject {
                     }
                 }
             }
-            print(conversation)
+            print(conversations)
         } catch {
             conversationErrors[conversationId] = error
         }
