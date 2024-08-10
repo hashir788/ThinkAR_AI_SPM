@@ -33,17 +33,28 @@ struct Tools {
 
 class ToolsHandler {
     func invokeTools(_ t: Tools, arguments: String?) -> String {
+        let args = arguments?.toDictionary()
+
         switch t.tool {
         case .lookupCalendar:
             print("Calendar func is called")
             return "Calendar func is called"
         case .changeBrightness:
-            print("Change brightness func is called")
-            return "Change brightness func is called"
+            let action = args!["action_type"] as! String
+            print("Asked to \(action) the brightness")
+            if action == "Increase" {
+                return "Device Brightness Increased"
+            } else {
+                return "Device Brightnes Decreases"
+            }
         case .changeVolume:
-
-            print("Change volume func is called")
-            return "Change volume func is called"
+            let action = args!["action_type"] as! String
+            print("Asked to \(action) the volume")
+            if action == "Increase" {
+                return "Device Volume Increased"
+            } else {
+                return "Device Volume Decreases"
+            }
         }
     }
 }

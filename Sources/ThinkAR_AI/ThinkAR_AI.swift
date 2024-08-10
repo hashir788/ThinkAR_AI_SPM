@@ -6,6 +6,8 @@ import Foundation
 import OpenAI
 
 public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
+    public init() {}
+    
     private static var groqKey = "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"
     
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
@@ -148,8 +150,8 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
         }
     }
     
-    public func addVoiceMessage(audio: Data, fileType: AudioTranscriptionQuery.FileType, conversationId: String) async {
-        let query = AudioTranscriptionQuery(file: audio, fileType: fileType, model: .whisper_1)
+    public func addVoiceMessage(audio: Data, fileType: String, conversationId: Conversation.ID) async {
+        let query = AudioTranscriptionQuery(file: audio, fileType: .init(rawValue: fileType)!, model: .whisper_1)
         do {
             let result = try await openAI.audioTranscriptions(query: query)
             let message = Message(id: UUID().uuidString, role: .user, content: result.text, createdAt: Date())
@@ -159,8 +161,8 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
         }
     }
     
-    public func translate(audio: Data, fileType: AudioTranscriptionQuery.FileType, conversationId: String) async {
-        let query = AudioTranslationQuery(file: audio, fileType: fileType, model: .whisper_1)
+    public func addTranslationMessage(audio: Data, fileType: String, conversationId: Conversation.ID) async {
+        let query = AudioTranslationQuery(file: audio, fileType: .init(rawValue: fileType)!, model: .whisper_1)
         do {
             let result = try await openAI.audioTranslations(query: query)
             let message = Message(id: UUID().uuidString, role: .user, content: result.text, createdAt: Date())

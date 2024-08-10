@@ -7,50 +7,53 @@
 
 import Foundation
 
+import Combine
+import Foundation
+
 public protocol ThinkARAIProtocol {
     /// List of conversations: Type of ``Conversation``
-    @Published var conversations: [Conversation]
+    var conversations: [Conversation] { get set }
     /// List of Errors
-    @Published var conversationErrors: [Conversation.ID: Error]
+    var conversationErrors: [Conversation.ID: Error] { get set }
     /// Currently selected conversation ID
-    @Published var selectedConversationID: Conversation.ID?
+    var selectedConversationID: Conversation.ID? { get set }
     
     /// Currently selected conversation
-    public var selectedConversation: Conversation?
+    var selectedConversation: Conversation? { get }
     
-    /// Selected conersation publisher
-    public var selectedConversationPublisher: AnyPublisher<Conversation?, Never>
-
+    /// Selected conversation publisher
+    var selectedConversationPublisher: AnyPublisher<Conversation?, Never> { get }
+    
     /// Function that adds messages to a conversation
     /// - Parameters:
     ///   - message: The message to be added to the conversation. Type of ``Message``
     ///   - conversationId: ID of the current conversation. Type of ``Conversation.ID``
     /// - Returns: Void
-    public func addMessage(message: Message, conversationId: Conversation.ID) async
+    func addMessage(message: Message, conversationId: Conversation.ID) async
     
     /// Function that adds a voice message. Audio is transcribed and then a message is added
     /// - Parameters:
     ///   - audio: Audio file to be transcribed. Type of ``Data``
-    ///   - fileType: Type of the audio file. ``AudioTranscriptionQuery.FileType``
-    ///   - conversationId: ID of the conversation ``String``
-    public func addVoiceMessage(audio: Data, fileType: AudioTranscriptionQuery.FileType, conversationId: String)
+    ///   - fileType: Type of the audio file. ``String``
+    ///   - conversationId: ID of the conversation. Type of ``Conversation.ID``
+    func addVoiceMessage(audio: Data, fileType: String, conversationId: Conversation.ID) async
     
-    /// Function that transalte a message from one to another language
+    /// Function that translates a message from one language to another
     /// - Parameters:
     ///   - audio: Audio file to be translated. Type of ``Data``
-    ///   - fileType: Type of the audio file. ``AudioTranslationQuery.FileType``
-    ///   - conversationId:  ID of the conversation ``String``
-    public func addTranslationMessage(audio: Data, fileType: AudioTranslationQuery.FileType, conversationId: String)
+    ///   - fileType: Type of the audio file. ``String``
+    ///   - conversationId: ID of the conversation. Type of ``Conversation.ID``
+    func addTranslationMessage(audio: Data, fileType: String, conversationId: Conversation.ID) async
     
     /// Function that creates a conversation
     /// - Returns: ID of the created conversation
-    public func createConversation() -> String
+    func createConversation() -> Conversation.ID
     
-    /// Select/set a conversation from list of conversaitons
-    /// - Parameter conversationId: ID of the converastion to be selcted/set ``String``
-    public func selectConversation(_ conversationId: Conversation.ID?)
+    /// Select/set a conversation from list of conversations
+    /// - Parameter conversationId: ID of the conversation to be selected/set. Type of ``Conversation.ID``
+    func selectConversation(_ conversationId: Conversation.ID?)
     
     /// Function to delete a conversation
-    /// - Parameter conversationId: ID of the converastion to be deleted ``String``
-    public func deleteConversation(_ conversationId: Conversation.ID)
+    /// - Parameter conversationId: ID of the conversation to be deleted. Type of ``Conversation.ID``
+    func deleteConversation(_ conversationId: Conversation.ID)
 }
