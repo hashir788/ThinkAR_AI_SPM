@@ -35,7 +35,7 @@ struct Tools {
 }
 
 class ToolsHandler {
-    func invokeTools(_ t: Tools, arguments: String?) -> String {
+    func invokeTools(_ t: Tools, arguments: String?) async -> String {
         let args = arguments?.toDictionary()
 
         switch t.tool {
@@ -90,33 +90,18 @@ class ToolsHandler {
             request.setValue("5f5381c914125b3dbc899a123e53b8e3208a7def", forHTTPHeaderField: "X-API-KEY")
             request.httpBody = jsonData
 
-            var newsResult: String
+            do {
+                // Perform the request
+                let (data, _) = try await URLSession.shared.data(for: request)
 
-            // Perform the request
-            let task = URLSession.shared.dataTask(with: request) { data, _, error in
-                if let error = error {
-                    print("Error: \(error)")
-                    newsResult = "Error: \(error)"
-                    return
+                if let result = String(data: data, encoding: .utf8) {
+                    return result
+                } else {
+                    return URLError(.badServerResponse).failureURLString!
                 }
-
-                guard let data = data else {
-                    print("No data received")
-                    newsResult = "No data received"
-                    return
-                }
-
-                do {
-                    // Try to parse the response data as JSON
-                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                    newsResult = "News on the topic \(topic) : \(jsonResponse)"
-
-                } catch let parsingError {
-                    newsResult = "Error getting news \(parsingError)"
-                }
+            } catch {
+                return "Something went wrong \(error)"
             }
-            // Start the task
-            task.resume()
         }
     }
 }

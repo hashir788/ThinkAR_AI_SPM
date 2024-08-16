@@ -101,7 +101,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolHandler = ToolsHandler()
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
-                            let toolResult: String = toolHandler.invokeTools(toolChoice, arguments: argument)
+                            let toolResult: String = await toolHandler.invokeTools(toolChoice, arguments: argument)
                             
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
@@ -170,14 +170,14 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
         }
     }
     
-    public func createAudioSpeech(input: String) async -> Data {
+    public func createAudioSpeech(input: String) async -> Result<Data, Error> {
         do {
-            
             let query = AudioSpeechQuery(model: .tts_1, input: input, voice: .alloy, responseFormat: .mp3, speed: 1.0)
             let result = try await openAI.audioCreateSpeech(query: query)
-            return result.audio
+            return .success(result.audio)
         } catch {
             print(error)
+            return .failure(error)
         }
     }
 }

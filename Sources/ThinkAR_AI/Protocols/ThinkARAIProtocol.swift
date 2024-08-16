@@ -47,7 +47,7 @@ public protocol ThinkARAIProtocol {
     
     /// Function that will create an audio speech using passed input text
     /// - Parameter input: Input to be created as audio speech ``String``
-    func createAudioSpeech(input: String) -> Data async
+    func createAudioSpeech(input: String) async -> Result<Data, Error>
     
     /// Function that creates a conversation
     /// - Returns: ID of the created conversation
