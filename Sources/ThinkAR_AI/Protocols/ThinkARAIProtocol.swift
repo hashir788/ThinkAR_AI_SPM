@@ -45,6 +45,10 @@ public protocol ThinkARAIProtocol {
     ///   - conversationId: ID of the conversation. Type of ``Conversation.ID``
     func addTranslationMessage(audio: Data, fileType: String, conversationId: Conversation.ID) async
     
+    /// Function that will create an audio speech using passed input text
+    /// - Parameter input: Input to be created as audio speech ``String``
+    func createAudioSpeech(input: String) -> Data async
+    
     /// Function that creates a conversation
     /// - Returns: ID of the created conversation
     func createConversation() -> Conversation.ID

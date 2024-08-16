@@ -13,6 +13,7 @@ struct Tools {
         case lookupCalendar = "lookup_calendar"
         case changeBrightness = "change_brightness"
         case changeVolume = "change_volume"
+        case getNews = "get_news"
 
         init?(from string: String) {
             switch string {
@@ -22,6 +23,8 @@ struct Tools {
                 self = .changeBrightness
             case "change_volume":
                 self = .changeVolume
+            case "get_news":
+                self = .getNews
             default:
                 return nil
             }
@@ -71,6 +74,49 @@ class ToolsHandler {
             } else {
                 return "Device Volume Decreased"
             }
+        case .getNews:
+            let topic = args!["topic"] as! String
+            print("Getting news about \(topic)")
+            let url = URL(string: "https://google.serper.dev/news")!
+
+            let parameters: [String: String] = [
+                "q": topic
+            ]
+            let jsonData = try! JSONSerialization.data(withJSONObject: parameters, options: [])
+            // Create the request
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("5f5381c914125b3dbc899a123e53b8e3208a7def", forHTTPHeaderField: "X-API-KEY")
+            request.httpBody = jsonData
+
+            var newsResult: String
+
+            // Perform the request
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    newsResult = "Error: \(error)"
+                    return
+                }
+
+                guard let data = data else {
+                    print("No data received")
+                    newsResult = "No data received"
+                    return
+                }
+
+                do {
+                    // Try to parse the response data as JSON
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+                    newsResult = "News on the topic \(topic) : \(jsonResponse)"
+
+                } catch let parsingError {
+                    newsResult = "Error getting news \(parsingError)"
+                }
+            }
+            // Start the task
+            task.resume()
         }
     }
 }

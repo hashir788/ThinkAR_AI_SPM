@@ -169,4 +169,15 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
             print(error)
         }
     }
+    
+    public func createAudioSpeech(input: String) async -> Data {
+        do {
+            
+            let query = AudioSpeechQuery(model: .tts_1, input: input, voice: .alloy, responseFormat: .mp3, speed: 1.0)
+            let result = try await openAI.audioCreateSpeech(query: query)
+            return result.audio
+        } catch {
+            print(error)
+        }
+    }
 }

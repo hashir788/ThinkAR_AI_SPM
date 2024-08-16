@@ -8,7 +8,7 @@
 import Foundation
 import OpenAI
 
-struct AgentTools {
+enum AgentTools {
     static let tools = [
         ChatQuery.ChatCompletionToolParam(function: .init(
             name: "lookup_calendar",
@@ -42,11 +42,17 @@ struct AgentTools {
                 required: ["action_type"],
                 enum: ["Increase", "Decrease"]
             )
+        )),
+        ChatQuery.ChatCompletionToolParam(function: .init(
+            name: "get_news",
+            description: "Get latest news on given topic",
+            parameters: .init(
+                type: .object,
+                properties: [
+                    "topic": .init(type: .string, description: "News Topic")
+                ],
+                required: ["action_type"]
+            )
         ))
     ]
-    
-    
-//    public init(){}
-    
-    
 }
