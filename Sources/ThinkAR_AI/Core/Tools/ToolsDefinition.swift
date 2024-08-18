@@ -2,7 +2,7 @@
 //  File.swift
 //
 //
-//  Created by Mohamed Hashir on 2024-08-05.
+//  Created on 2024-08-05.
 //
 
 import Foundation
@@ -51,7 +51,16 @@ enum AgentTools {
                 properties: [
                     "topic": .init(type: .string, description: "News Topic")
                 ],
-                required: ["action_type"]
+                required: ["topic"]
+            )
+        )),
+        ChatQuery.ChatCompletionToolParam(function: .init(
+            name: "get_EMR",
+            description: "Get EMR",
+            parameters: .init(
+                type: .object,
+                properties: [:],
+                required: []
             )
         ))
     ]

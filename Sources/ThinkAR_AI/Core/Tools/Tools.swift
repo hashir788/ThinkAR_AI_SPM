@@ -2,11 +2,12 @@
 //  File.swift
 //
 //
-//  Created by Mohamed Hashir on 2024-08-09.
+//  Created on 2024-08-09.
 //
 
 import Foundation
 import MBBluetooth
+import OpenAI
 
 struct Tools {
     enum ToolCalls: String {
@@ -14,6 +15,7 @@ struct Tools {
         case changeBrightness = "change_brightness"
         case changeVolume = "change_volume"
         case getNews = "get_news"
+        case getEMR = "get_EMR"
 
         init?(from string: String) {
             switch string {
@@ -25,6 +27,8 @@ struct Tools {
                 self = .changeVolume
             case "get_news":
                 self = .getNews
+            case "get_EMR":
+                self = .getEMR
             default:
                 return nil
             }
@@ -101,6 +105,28 @@ class ToolsHandler {
                 }
             } catch {
                 return "Something went wrong \(error)"
+            }
+        case .getEMR:
+            print("Getting EMR of a patient....")
+            let groqKey = "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"
+            let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
+            let openAI = OpenAI(configuration: config)
+            let groqModel = "llama3-groq-70b-8192-tool-use-preview"
+
+            let msgs =
+                [
+                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "Generate a JSON object of Details EMR report for a patient")!
+                ]
+
+            let toolQuery = ChatQuery(
+                messages: msgs, model: groqModel
+            )
+
+            do {
+                let result = try await openAI.chats(query: toolQuery)
+                return "Patient's EMR is : \(result.choices[0].message.content!)"
+            } catch {
+                return "Error in Getting Patient's EMR"
             }
         }
     }
