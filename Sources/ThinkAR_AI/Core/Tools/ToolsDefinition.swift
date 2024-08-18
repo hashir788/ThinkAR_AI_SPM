@@ -59,8 +59,10 @@ enum AgentTools {
             description: "Get EMR",
             parameters: .init(
                 type: .object,
-                properties: [:],
-                required: []
+                properties: [
+                    "ID": .init(type: .string, description: "ID of the patient")
+                ],
+                required: ["ID"]
             )
         ))
     ]

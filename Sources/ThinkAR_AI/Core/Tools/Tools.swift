@@ -107,7 +107,8 @@ class ToolsHandler {
                 return "Something went wrong \(error)"
             }
         case .getEMR:
-            print("Getting EMR of a patient....")
+            let id = args!["ID"] as! String
+            print("Getting EMR of a patient id of \(id)....")
             let groqKey = "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"
             let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
             let openAI = OpenAI(configuration: config)
@@ -115,7 +116,7 @@ class ToolsHandler {
 
             let msgs =
                 [
-                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "Generate a JSON object of Details EMR report for a patient")!
+                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "Generate a detailed EMR for patient with ID of \(id), Return as JSON Object")!
                 ]
 
             let toolQuery = ChatQuery(
@@ -124,6 +125,7 @@ class ToolsHandler {
 
             do {
                 let result = try await openAI.chats(query: toolQuery)
+                print("Patient's EMR is : \(result.choices[0].message.content!)")
                 return "Patient's EMR is : \(result.choices[0].message.content!)"
             } catch {
                 return "Error in Getting Patient's EMR"
