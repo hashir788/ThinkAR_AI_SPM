@@ -114,19 +114,12 @@ class ToolsHandler {
             let openAI = OpenAI(configuration: config)
             let groqModel = "llama3-groq-70b-8192-tool-use-preview"
 
-            let msgs =
-                [
-                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "Generate a detailed EMR for patient with ID of \(id), Return as JSON Object")!
-                ]
-
-            let toolQuery = ChatQuery(
-                messages: msgs, model: groqModel
-            )
+            let query = CompletionsQuery(model: groqModel, prompt: "Generate a detailed EMR for patient with ID of \(id), Return as JSON Object")
 
             do {
-                let result = try await openAI.chats(query: toolQuery)
-                print("Patient's EMR is : \(result)")
-                return "Patient's EMR is : \(result.choices[0].message.content!)"
+                let result = try await openAI.completions(query: query)
+                print("Patient's EMR is : \(result.choices[0].text)")
+                return "Patient's EMR is : \(result.choices[0].text)"
             } catch {
                 return "Error in Getting Patient's EMR"
             }
