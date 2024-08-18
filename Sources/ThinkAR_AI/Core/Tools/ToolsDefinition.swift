@@ -56,7 +56,18 @@ enum AgentTools {
         )),
         ChatQuery.ChatCompletionToolParam(function: .init(
             name: "get_EMR",
-            description: "Get EMR",
+            description: "Get EMR of a patient",
+            parameters: .init(
+                type: .object,
+                properties: [
+                    "ID": .init(type: .string, description: "ID of the patient")
+                ],
+                required: ["ID"]
+            )
+        )),
+        ChatQuery.ChatCompletionToolParam(function: .init(
+            name: "get_ECG",
+            description: "Get ECG of a patient",
             parameters: .init(
                 type: .object,
                 properties: [

@@ -16,6 +16,7 @@ struct Tools {
         case changeVolume = "change_volume"
         case getNews = "get_news"
         case getEMR = "get_EMR"
+        case getECG = "get_ECG"
 
         init?(from string: String) {
             switch string {
@@ -29,6 +30,8 @@ struct Tools {
                 self = .getNews
             case "get_EMR":
                 self = .getEMR
+            case "get_ECG":
+                self = .getECG
             default:
                 return nil
             }
@@ -39,6 +42,12 @@ struct Tools {
 }
 
 class ToolsHandler {
+    private static var groqKey = "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"
+
+    private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
+    private let openAI = OpenAI(configuration: config)
+    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
+
     func invokeTools(_ t: Tools, arguments: String?) async -> String {
         let args = arguments?.toDictionary()
 
@@ -109,10 +118,6 @@ class ToolsHandler {
         case .getEMR:
             let id = args!["ID"] as! String
             print("Getting EMR of a patient id of \(id)....")
-            let groqKey = "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"
-            let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
-            let openAI = OpenAI(configuration: config)
-            let groqModel = "llama3-groq-70b-8192-tool-use-preview"
 
             let msgs =
                 [
@@ -130,6 +135,27 @@ class ToolsHandler {
                 return "Patient's EMR is : \(result.choices[0].message.content!)"
             } catch {
                 return "Error in Getting Patient's EMR"
+            }
+        case .getECG:
+            let id = args!["ID"] as! String
+            print("Getting EMR of a patient id of \(id)....")
+
+            let msgs =
+                [
+                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "You're a medical expert assistant, great at creating ECG's. Create Detailed and Precise ECG for provided patient ID. Always create EMR with close to real life data, do not use standard names like John Doe.")!,
+                    ChatQuery.ChatCompletionMessageParam(role: .user, content: "Generate a detailed ECG for patient with ID of \(id), Return as JSON Object")!
+                ]
+
+            let toolQuery = ChatQuery(
+                messages: msgs, model: groqModel
+            )
+
+            do {
+                let result = try await openAI.chats(query: toolQuery)
+                print("Patient's ECG is : \(result.choices[0].message.content!)")
+                return "Patient's ECG is : \(result.choices[0].message.content!)"
+            } catch {
+                return "Error in Getting Patient's ECG"
             }
         }
     }
