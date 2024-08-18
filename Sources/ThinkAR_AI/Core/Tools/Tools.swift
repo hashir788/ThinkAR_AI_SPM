@@ -121,6 +121,7 @@ class ToolsHandler {
                 print("Patient's EMR is : \(result.choices[0].text)")
                 return "Patient's EMR is : \(result.choices[0].text)"
             } catch {
+                print("Error: \(error)")
                 return "Error in Getting Patient's EMR"
             }
         }
