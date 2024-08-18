@@ -116,7 +116,7 @@ class ToolsHandler {
 
             let msgs =
                 [
-                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "You're a medical expert assistant, great at creating EMR's. Create Detailed and Precise EMR for provided patient ID")!,
+                    ChatQuery.ChatCompletionMessageParam(role: .system, content: "You're a medical expert assistant, great at creating EMR's. Create Detailed and Precise EMR for provided patient ID. Always create EMR with close to real life data, do not use standard names like John Doe.")!,
                     ChatQuery.ChatCompletionMessageParam(role: .user, content: "Generate a detailed EMR for patient with ID of \(id), Return as JSON Object")!
                 ]
 
