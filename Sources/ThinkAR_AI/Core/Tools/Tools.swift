@@ -125,7 +125,7 @@ class ToolsHandler {
 
             do {
                 let result = try await openAI.chats(query: toolQuery)
-                print("Patient's EMR is : \(result.choices[0].message.content!)")
+                print("Patient's EMR is : \(result)")
                 return "Patient's EMR is : \(result.choices[0].message.content!)"
             } catch {
                 return "Error in Getting Patient's EMR"
