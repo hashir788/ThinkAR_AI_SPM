@@ -138,7 +138,7 @@ class ToolsHandler {
             }
         case .getECG:
             let id = args!["ID"] as! String
-            print("Getting EMR of a patient id of \(id)....")
+            print("Getting ECG of a patient id of \(id)....")
 
             let msgs =
                 [
