@@ -100,7 +100,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolChoice = Tools(tool: Tools.ToolCalls(rawValue: name)!)
                             
                             let toolResult: String = await toolHandler.invokeTools(toolChoice, arguments: argument)
-                            
+                            print(toolResult)
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
                             let toolResultMessage = Message(id: UUID().uuidString, role: .assistant, content: toolResult, createdAt: Date())
@@ -115,7 +115,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             
                             let result = try await openAI.chats(query: toolQuery)
                             print(result)
-                            messageText += "\(String(describing: result.choices[0].message.content))"
+                            messageText += "\(String(describing: result.choices[0].message.content?.string))"
                             print(messageText)
                         }
                     }

@@ -108,7 +108,6 @@ class ToolsHandler {
                 let (data, _) = try await URLSession.shared.data(for: request)
 
                 if let result = String(data: data, encoding: .utf8) {
-                    print(result)
                     return result
                 } else {
                     return URLError(.badServerResponse).failureURLString!
