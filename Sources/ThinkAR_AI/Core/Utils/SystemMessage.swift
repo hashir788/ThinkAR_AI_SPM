@@ -26,12 +26,13 @@ enum SystemMessage: String {
     like booking an uber rider or ordering food from Food Panda*
     ** Your answers must be short and precise**
     """
-    case toolSystemPrompt = """
+    case toolSystemPrompt =
+        """
         In a conversation, the AI decided to call tools
         to do a certain task programatically,
         you're given what the user had requested and what tools
-    are called with arguments and what the returned results.
-    Your job is create a message based what the tool call was and what the result is.
-    Keep it short, non technichal and precise
-    """
+        are called with arguments and what the returned results.
+        Your job is create a message based what the tool call was and what the result is.
+        Keep it short, non technichal and precise
+        """
 }

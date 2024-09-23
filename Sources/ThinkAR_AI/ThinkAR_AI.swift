@@ -104,9 +104,10 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             // Make a new chat completion request
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
                             let toolResultMessage = Message(id: UUID().uuidString, role: .assistant, content: toolResult, createdAt: Date())
-                            let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
+//                            let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
+                            let finalMsgs = [Message(id: UUID().uuidString, role: .assistant, content: "Tell me a joke", createdAt: Date())]
 
-                            let msgs = finalMsgs.map { message in
+                            let msgs = finalMsgs.map { _ in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
                             }
                             let toolQuery = ChatQuery(
@@ -115,7 +116,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             print(msgs)
                             
                             let result = try await openAI.chats(query: toolQuery)
-//                            print(result)
+                            print(result)
                             messageText += "\(String(describing: result.choices[0].message.content?.string))"
 //                            print(messageText)
                         }
