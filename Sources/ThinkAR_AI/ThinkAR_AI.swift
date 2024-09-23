@@ -105,9 +105,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolResult: String = await toolHandler.invokeTools(toolChoice, arguments: argument)
                             print(toolResult)
                             // Make a new chat completion request
-                            let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
-                            let toolResultMessage = Message(id: UUID().uuidString, role: .assistant, content: toolResult, createdAt: Date())
-//                            let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
+                          
                             let finalMsgs = [Message(id: UUID().uuidString, role: .system, content: SystemMessage.prompt.rawValue, createdAt: Date()), Message(id: UUID().uuidString, role: .user, content: """
                             User question and API responses for that question are provided.
                             Compose a nice chat response like an assistant using those details.
