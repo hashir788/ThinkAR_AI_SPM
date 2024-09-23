@@ -115,9 +115,9 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             print(msgs)
 
                             let result = try await openAI.chats(query: toolQuery)
-                            print(result)
+//                            print(result)
                             messageText += "\(String(describing: result.choices[0].message.content?.string))"
-                            print(messageText)
+//                            print(messageText)
                         }
                     }
                     
