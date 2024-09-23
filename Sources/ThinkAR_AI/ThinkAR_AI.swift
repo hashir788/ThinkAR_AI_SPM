@@ -16,6 +16,9 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
     @Published public var conversationErrors: [Conversation.ID: Error] = [:]
     @Published public var selectedConversationID: Conversation.ID?
     
+    // Callback that will be triggered when the stream ends
+    public var onStreamEnd: (() -> Void)?
+    
     public var selectedConversation: Conversation? {
         selectedConversationID.flatMap { id in
             conversations.first { $0.id == id }
@@ -127,7 +130,6 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let result = try await openAI.chats(query: toolQuery)
                             print(result)
                             messageText += "\(String(describing: result.choices[0].message.content?.string))"
-//                            print(messageText)
                         }
                     }
                     
@@ -154,7 +156,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                     }
                 }
             }
-            print("Stream Completed")
+            onStreamEnd?()
         } catch {
             conversationErrors[conversationId] = error
         }
