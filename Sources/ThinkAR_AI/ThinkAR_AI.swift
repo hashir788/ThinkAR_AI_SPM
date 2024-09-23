@@ -125,11 +125,11 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                                 messages: msgs, model: groqModel
                             )
 
-                            print(msgs)
-
                             let result = try await openAI.chats(query: toolQuery)
-                            print(result)
-                            messageText += "\(String(describing: result.choices[0].message.content))"
+                            
+                            result.choices[0].message.content.map { content in
+                                messageText = content.string ?? ""
+                            }
                         }
                     }
                     
