@@ -10,7 +10,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "ThinkAR_AI",
-            targets: ["ThinkAR_AI"]),
+            targets: ["ThinkAR_AI"]
+        ),
     ],
     dependencies: [
         //        .package(url: "https://github.com/jamesrochabrun/SwiftOpenAI", from: "3.6.2")
@@ -22,12 +23,13 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ThinkAR_AI", dependencies: ["OpenAI","MBBluetooth"] , path: "Sources"
+            name: "ThinkAR_AI", dependencies: ["OpenAI", "MBBluetooth"], path: "Sources"
 //            linkerSettings: [.linkedFramework("Binaries/MBBluetooth")]
         ),
         .binaryTarget(name: "MBBluetooth", path: "./Binaries/MBBluetooth.xcframework"),
         .testTarget(
             name: "ThinkAR_AITests",
-            dependencies: ["ThinkAR_AI"]),
+            dependencies: ["ThinkAR_AI"]
+        ),
     ]
 )
