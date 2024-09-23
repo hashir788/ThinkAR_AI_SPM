@@ -25,6 +25,10 @@ enum SystemMessage: String {
     *Please make sure you get the user's permission before making any critical decisions,
     like booking an uber rider or ordering food from Food Panda*
     ** Your answers must be short and precise**
+
+    For latest affairs or anything you have no knowledge of use tool
+    search_internet.
+
     """
     case toolSystemPrompt =
         """
