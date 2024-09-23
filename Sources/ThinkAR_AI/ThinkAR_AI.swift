@@ -113,6 +113,13 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolQuery = ChatQuery(
                                 messages: msgs, model: groqModel
                             )
+                            let query = CompletionsQuery(model: .textDavinci_003, prompt: "What is 42?", temperature: 0, maxTokens: 100, topP: 1, frequencyPenalty: 0, presencePenalty: 0, stop: ["\\n"])
+                            openAI.completions(query: query) { result in
+                                // Handle result here
+                                print(result)
+                            }
+                            // or
+//                            let resul = try await openAI.completions(query: query)
                             print(msgs)
 
                             let result = try await openAI.chats(query: toolQuery)
