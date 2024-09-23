@@ -14,7 +14,7 @@ struct Tools {
         case lookupCalendar = "lookup_calendar"
         case changeBrightness = "change_brightness"
         case changeVolume = "change_volume"
-        case getNews = "get_news"
+        case searchInternet = "search_internet"
         case getEMR = "get_EMR"
         case getECG = "get_ECG"
 
@@ -26,8 +26,8 @@ struct Tools {
                 self = .changeBrightness
             case "change_volume":
                 self = .changeVolume
-            case "get_news":
-                self = .getNews
+            case "search_internet":
+                self = .searchInternet
             case "get_EMR":
                 self = .getEMR
             case "get_ECG":
@@ -87,9 +87,9 @@ class ToolsHandler {
             } else {
                 return "Device Volume Decreased"
             }
-        case .getNews:
-            let topic = args!["topic"] as! String
-            print("Getting news about \(topic)")
+        case .searchInternet:
+            let topic = args!["query"] as! String
+            print("Searching internet about \(topic)")
             let url = URL(string: "https://google.serper.dev/news")!
 
             let parameters: [String: String] = [

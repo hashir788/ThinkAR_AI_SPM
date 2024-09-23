@@ -44,14 +44,14 @@ enum AgentTools {
             )
         )),
         ChatQuery.ChatCompletionToolParam(function: .init(
-            name: "get_news",
-            description: "Get latest news on given topic",
+            name: "search_internet",
+            description: "Search internet for latest news, current affairs, stock prices and anything on internet ",
             parameters: .init(
                 type: .object,
                 properties: [
-                    "topic": .init(type: .string, description: "News Topic")
+                    "query": .init(type: .string, description: "News Topic")
                 ],
-                required: ["topic"]
+                required: ["query"]
             )
         )),
         ChatQuery.ChatCompletionToolParam(function: .init(
