@@ -105,7 +105,15 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolSystemMessage = Message(id: UUID().uuidString, role: .system, content: SystemMessage.toolSystemPrompt.rawValue, createdAt: Date())
                             let toolResultMessage = Message(id: UUID().uuidString, role: .assistant, content: toolResult, createdAt: Date())
 //                            let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
-                            let finalMsgs = [Message(id: UUID().uuidString, role: .user, content: "Tell me a joke", createdAt: Date())]
+                            let finalMsgs = [Message(id: UUID().uuidString, role: .user, content: """
+                            User question and API responses for that question are provided.
+                            Compose a nice response like an assistant using those details.
+                            
+                            User Question: \(lastUserMessage.content)
+                            
+                            API Response: \(toolResult)
+                            
+                            """, createdAt: Date())]
 
                             let msgs = finalMsgs.map { message in
                                 ChatQuery.ChatCompletionMessageParam(role: message.role, content: message.content)!
@@ -113,13 +121,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                             let toolQuery = ChatQuery(
                                 messages: msgs, model: groqModel
                             )
-                            let query = CompletionsQuery(model: .textDavinci_003, prompt: "What is 42?", temperature: 0, maxTokens: 100, topP: 1, frequencyPenalty: 0, presencePenalty: 0, stop: ["\\n"])
-                            openAI.completions(query: query) { result in
-                                // Handle result here
-                                print(result)
-                            }
-                            // or
-//                            let resul = try await openAI.completions(query: query)
+
                             print(msgs)
 
                             let result = try await openAI.chats(query: toolQuery)
