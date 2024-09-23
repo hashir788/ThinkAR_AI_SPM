@@ -107,7 +107,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
 //                            let finalMsgs = [toolSystemMessage, lastUserMessage, toolResultMessage]
                             let finalMsgs = [Message(id: UUID().uuidString, role: .user, content: """
                             User question and API responses for that question are provided.
-                            Compose a nice response like an assistant using those details.
+                            Compose a nice chat response like an assistant using those details.
                             
                             User Question: \(lastUserMessage.content)
                             
