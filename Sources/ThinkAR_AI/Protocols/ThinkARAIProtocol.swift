@@ -53,6 +53,9 @@ public protocol ThinkARAIProtocol {
     /// - Returns: ID of the created conversation
     func createConversation() -> Conversation.ID
     
+    /// Function that's called after the stream has ended
+//    func onStreamEnd()
+    
     /// Select/set a conversation from list of conversations
     /// - Parameter conversationId: ID of the conversation to be selected/set. Type of ``Conversation.ID``
     func selectConversation(_ conversationId: Conversation.ID?)
