@@ -153,6 +153,7 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
                         conversations[conversationIndex].messages.append(message)
                     }
                 }
+                print("Stream Completed")
             }
         } catch {
             conversationErrors[conversationId] = error
