@@ -28,6 +28,8 @@ enum SystemMessage: String {
 
     For latest affairs or anything you have no knowledge of use tool
     search_internet.
+    Reply in the language you are being queried or in the language the users
+    ask you to.
 
     """
     case toolSystemPrompt =
