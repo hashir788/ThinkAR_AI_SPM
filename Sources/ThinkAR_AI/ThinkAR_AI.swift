@@ -9,8 +9,8 @@ public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
     
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
-    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
-//    private let groqModel = "llama-3.1-70b-versatile"
+//    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
+    private let groqModel = "llama-3.1-70b-versatile"
     
     @Published public var conversations: [Conversation] = []
     @Published public var conversationErrors: [Conversation.ID: Error] = [:]
