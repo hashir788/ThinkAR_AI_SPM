@@ -5,7 +5,7 @@ import OpenAI
 public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
     public init() {}
     
-    private static var groqKey = "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"
+    private static var groqKey = "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"
     
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
