@@ -5,12 +5,12 @@ import OpenAI
 public final class ThinkAR_AI: ThinkARAIProtocol, ObservableObject {
     public init() {}
     
-    private static var groqKey = "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"
+    private static var groqKey = "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"
     
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
-//    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
-    private let groqModel = "llama-3.1-70b-versatile"
+    private let groqModel = "llama3-groq-70b-8192-tool-use-preview"
+//    private let groqModel = "llama-3.1-70b-versatile"
     
     @Published public var conversations: [Conversation] = []
     @Published public var conversationErrors: [Conversation.ID: Error] = [:]

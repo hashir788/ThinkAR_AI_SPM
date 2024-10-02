@@ -42,7 +42,7 @@ struct Tools {
 }
 
 class ToolsHandler {
-    private static var groqKey = "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"
+    private static var groqKey = "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"
 
     private static let config = OpenAI.Configuration(token: groqKey, host: "api.groq.com", scheme: "https")
     private let openAI = OpenAI(configuration: config)
